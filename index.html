@@ -102,7 +102,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
     <script>
-        // Scene setup
+        // setup scene parameters
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -111,7 +111,7 @@
         renderer.shadowMap.enabled = true;
         document.getElementById('container').appendChild(renderer.domElement);
 
-        // Add starfield background
+        // starfield background
         const starGeometry = new THREE.BufferGeometry();
         const starMaterial = new THREE.PointsMaterial({
             color: 0xffffff,
@@ -132,7 +132,7 @@
         const stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
 
-        // Earth with normal map for better detail
+        // earth map
         const earthGeometry = new THREE.SphereGeometry(5, 128, 128);
         const earthTexture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
         const earthBump = new THREE.TextureLoader().load('https://threejs.org/examples/textures/planets/earth_normal_2048.jpg');
@@ -153,7 +153,7 @@
         earth.rotation.y = Math.PI;
         scene.add(earth);
 
-        // Advanced lighting
+        // lighting
         const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
         scene.add(ambientLight);
         
@@ -167,10 +167,10 @@
         const hemisphereLight = new THREE.HemisphereLight(0x00aaff, 0xffaa00, 0.3);
         scene.add(hemisphereLight);
 
-        // Camera position
+  
         camera.position.z = 15;
 
-        // Controls - disable zoom and pan
+        // controls - disable zoom and pan
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableZoom = false;
         controls.enablePan = false;
@@ -179,7 +179,7 @@
         controls.autoRotate = true;
         controls.autoRotateSpeed = 0.5;
 
-        // Satellite chain parameters
+        // satellite chain parameters
         let satellites = [];
         let connectionLines = [];
         const satelliteGeometry = new THREE.SphereGeometry(0.15, 16, 16);
@@ -190,7 +190,7 @@
         const boston = { lat: 138, lng: -71.06 };
         const perth = { lat: -31.95, lng: -63.00};
 
-        // Convert lat/long to 3D coordinates
+        // convert lat/long to 3D coordinates
         function latLongToVector3(lat, lng, radius) {
             const phi = (90 - lat) * (Math.PI / 180);
             const theta = (lng + 180) * (Math.PI / 180);
@@ -202,7 +202,7 @@
             );
         }
 
-        // Create perfectly spaced points along great circle arc
+        // create perfectly spaced points along great circle arc
         function createGreatCirclePoints(start, end, count) {
             const points = [];
             
@@ -227,7 +227,7 @@
             return points;
         }
 
-        // Create satellite chain with perfect spacing
+        // create satellite chain with perfect spacing
         function createSatelliteChain(count) {
             // Clear existing satellites and lines
             satellites.forEach(sat => scene.remove(sat));
@@ -235,24 +235,24 @@
             satellites = [];
             connectionLines = [];
             
-            // Get start and end points
+            // get start and end points
             const start = latLongToVector3(boston.lat, boston.lng, 5.1);
             const end = latLongToVector3(perth.lat, perth.lng, 5.1);
             
-            // Create perfectly spaced points along the great circle
+            // create perfectly spaced points along the great circle
             const points = createGreatCirclePoints(start, end, count);
             
-            // Create satellites and connection lines
+            // create satellites and connection lines
             for (let i = 0; i < points.length; i++) {
                 const position = points[i];
                 
-                // Create satellite
+                // create satellite
                 const satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
                 satellite.position.copy(position);
                 scene.add(satellite);
                 satellites.push(satellite);
                 
-                // Create connection lines
+                // create connection lines
                 if (i > 0) {
                     const lineGeometry = new THREE.BufferGeometry().setFromPoints([points[i-1], points[i]]);
                     const lineMaterial = new THREE.LineBasicMaterial({ 
@@ -268,10 +268,10 @@
             }
         }
 
-        // Initial setup
+        // initial setup
         createSatelliteChain(10);
 
-        // Slider control
+        // slider control
         const slider = document.getElementById('slider');
         const countDisplay = document.getElementById('repeater-count');
         
@@ -281,14 +281,14 @@
             createSatelliteChain(count);
         });
 
-        // Handle window resize
+        // handle window resize
         window.addEventListener('resize', function() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Animation loop
+        // animation loop
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
