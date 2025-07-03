@@ -74,14 +74,6 @@ The visualization works best in modern browsers that support WebGL:
    - The visualization will auto-rotate
    - Zoom controls are disabled to maintain optimal viewing distance
 
-## Technical Details
-
-The visualization implements:
-- Great circle calculations for optimal satellite placement
-- Realistic Earth rendering with normal mapping and specular highlights
-- Dynamic satellite chain generation with proper spacing
-- Efficient WebGL rendering with Three.js
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
